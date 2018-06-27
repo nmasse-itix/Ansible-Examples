@@ -1,0 +1,57 @@
+---
+
+- name: Show how ansible defer variable evaluation to the last moment
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - name: Shows usage of interdependant variables
+    block:
+    - debug:
+        msg: '{{ abcd }}'
+    - name: Unit tests
+      assert:
+        that:
+        - abcd == "aadd"
+    vars:
+      a: "a"
+      b: '{{ a }}'
+      ab: '{{ a }}{{ b }}'
+      abcd: '{{ ab }}{{ cd }}'
+      cd: '{{ c }}{{ d }}'
+      c: '{{ d }}'
+      d: "d"
+  
+  - name: Create a temporary directory
+    tempfile: 
+      state: directory
+    register: tempfile
+
+  - name: Shows that variables are evaluated when used and not when assigned
+    block:
+    - name: Nope, the file does not exists...
+      set_fact:
+        test_output1: '{{ test_variable }}'
+      register: task1
+      ignore_errors: true
+
+    - name: Create the file
+      file:
+        path: '{{ test_file }}'
+        state: touch
+
+    - name: Now, it should be fine...
+      set_fact:
+        test_output2: '{{ test_variable }}'
+      register: task2
+      ignore_errors: true
+
+    - name: Unit tests
+      assert:
+        that:
+        - task1 is failed
+        - task2 is not failed
+        - test_output1 is not defined
+        - test_output2 is defined
+    vars:
+      test_file: '{{ tempfile.path }}/i-am-here'
+      test_variable: '{{ lookup(''file'', test_file) }}'

@@ -1,0 +1,31 @@
+---
+
+- name: Uses the "select" filter and the "search" test to filter a list
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    input:
+    # This is a sample output of the "getent ahosts openshift39.openshift.test" command
+    # 
+    # - command: openshift39.openshift.test
+    #   register: getent
+    #
+    # => this is getent.stdout_lines
+    #
+    - 192.168.23.175  STREAM openshift39.openshift.test
+    - 192.168.23.175  DGRAM
+    - 192.168.23.175  RAW
+    - 192.168.23.176  STREAM 
+    - 192.168.23.176  DGRAM  
+    - 192.168.23.176  RAW   
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output|length == 2
+        - output|first == "192.168.23.175"
+        - output|last == "192.168.23.176"
+    vars:
+      output: '{{ input|select(''search'', ''\bSTREAM\b'')|map(''regex_replace'', ''^(\S+)\s+STREAM\b.*$'', ''\1'')|list }}'
