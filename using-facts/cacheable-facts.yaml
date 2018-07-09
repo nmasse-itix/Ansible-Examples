@@ -1,0 +1,17 @@
+---
+
+- name: A cacheable fact can be defined and used between invocations / playbooks
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - debug:
+      var: myfact456
+  - set_fact:
+      myfact456: test
+      cacheable: true
+    when: myfact456 is not defined
+  - assert:
+      that:
+      - "myfact456 == 'test'"
+      - "'myfact456' in ansible_facts"
+      - "ansible_facts.myfact456 == 'test'"

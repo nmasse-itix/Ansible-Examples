@@ -1,0 +1,23 @@
+---
+
+- name: A standard fact can be defined in a playbook...
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - set_fact:
+      myfact123: test
+  - assert:
+      that:
+      # A fact is available as a standard variable
+      - "myfact123 == 'test'"
+      # But not part of the "ansible_facts" dictionary
+      - "'myfact123' not in ansible_facts"
+
+- name: and used in another role/playbook !
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - assert:
+      that:
+      - "myfact123 == 'test'"
+      - "'myfact123' not in ansible_facts"
