@@ -1,0 +1,49 @@
+---
+
+- name: Show how ansible defer variable evaluation to the last moment
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    output: '{{ input }}'
+  tasks:
+  - set_fact:
+      input: 'dummy'
+  - set_fact:
+      input: 'foo'
+  - debug:
+      var: output
+  - assert:
+      that:
+      # "output" contains the value of "input" at the time it has been used
+      - output == 'foo'
+  - set_fact:
+      input: bar
+  - debug:
+      var: output
+  - assert:
+      that:
+      - output == 'bar'
+
+- name: But the value of a fact is computed during assignation
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - set_fact:
+      input: test1
+  # Now "output" is not a variable but a fact
+  - set_fact:
+      output: '{{ input }}'
+  - debug:
+      var: output
+  - assert:
+      that:
+      # "output" contains the value of "input" at the time it has been defined
+      - output == 'test1'
+  - set_fact:
+      input: test2
+  - debug:
+      var: output
+  - assert:
+      that:
+      # "output" contains the value of "input" at the time it has been defined
+      - output == 'test1'

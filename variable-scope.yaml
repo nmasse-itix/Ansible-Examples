@@ -1,0 +1,21 @@
+---
+
+- name: Variables defined on tasks are local to those tasks
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    check: outter
+  tasks:
+  - block:
+    - debug:
+        var: check
+    - assert:
+        that:
+        - check == 'inner'
+    vars:
+      check: inner
+  - debug:
+      var: check
+  - assert:
+      that:
+      - check == 'outter'
