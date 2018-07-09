@@ -1,0 +1,14 @@
+
+- name: The value of a variable can be computed from a Jinja template, stored in a file
+  gather_facts: no
+  hosts: localhost
+  vars:
+    foo: 'bar'
+    myname: 'Nicolas'
+    output: '{{ lookup(''template'', ''output.j2'') }}'
+  tasks:
+  - debug:
+      var: 'output'
+  - assert:
+      that:
+      - output == 'Hello Nicolas, foo = bar'
