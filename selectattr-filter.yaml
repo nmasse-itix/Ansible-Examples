@@ -1,0 +1,34 @@
+---
+
+- name: The selectattr filter can be used to filter a list, based on a criteria
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    input:
+    - id: 2555418101286
+      system_name: hits
+    - id: 2555418119094
+      system_name: Say_Hello
+    - id: 2555418119095
+      system_name: Say_Goodbye
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output|length == 1
+        - (output|first).system_name == 'Say_Hello'
+    vars:
+      output: "{{ input|selectattr('id', 'equalto', id)|list }}"
+      id: 2555418119094
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output|length == 1
+        - (output|first).id == 2555418119094
+    vars:
+      output: "{{ input|selectattr('system_name', 'equalto', system_name)|list }}"
+      system_name: Say_Hello

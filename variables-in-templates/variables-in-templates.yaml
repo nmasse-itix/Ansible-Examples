@@ -1,0 +1,16 @@
+---
+
+- name: 'Variable in templates: a template can use a variable from task or playbook but not from an outter template'
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    input: 'OK'
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output == "OKKOOK"
+    vars:
+      output: "{{ lookup('template', 'template.j2') }}"

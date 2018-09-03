@@ -1,0 +1,30 @@
+
+- name: Variables loaded dynamically are available everywhere in the playbook
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - include_vars: extra.yaml
+  roles:
+  - my-vars
+  post_tasks:
+  - debug:
+      var: extra
+  - debug:
+      var: extra_role
+  - assert:
+      that:
+      - extra is defined
+      - extra_role is defined
+
+- name: Even in another playbook !
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - debug:
+      var: extra
+  - debug:
+      var: extra_role
+  - assert:
+      that:
+      - extra is defined
+      - extra_role is defined

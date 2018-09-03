@@ -1,0 +1,25 @@
+---
+
+- name: 'Set Theory Filters: union operates on set of structured objects'
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output|length == 3
+    vars:
+      output: "{{ input1|union(input2) }}"
+      input1:
+      - id: 1
+        name: john
+      - id: 3
+        name: smith
+      input2:
+      - id: 1
+        name: john
+      - id: 2
+        name: jane
+

@@ -1,0 +1,4 @@
+---
+
+- name: Include extra variables dynamically
+  include_vars: extra.yaml
