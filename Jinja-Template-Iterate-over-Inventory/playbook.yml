@@ -1,0 +1,24 @@
+- hosts: localhost
+  tasks:
+  - name: Add conf haproxy for infra node
+    blockinfile:
+      path: '{{ playbook_dir }}/haproxy.cfg'
+      marker: "# {mark} Add haproxy conf"
+      insertafter: "EOF"
+      content: |
+        frontend atomic-openshift-web
+            bind *:80
+            bind *:443
+            default_backend atomic-openshift-web
+            mode tcp
+            option tcplog
+        
+        backend atomic-openshift-web
+            balance source
+            mode tcp
+        {% for item in groups['nodes'] -%}
+        {%- set node_labels = hostvars[item]['openshift_node_labels']|default({}) -%}
+        {%- if 'region' in node_labels and node_labels['region'] == "infra" %}
+            server {{ hostvars[item]['inventory_hostname_short'] }} {{ hostvars[item]['inventory_hostname'] }}
+        {% endif -%}
+        {%- endfor -%}
