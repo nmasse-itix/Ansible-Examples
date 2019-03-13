@@ -1,0 +1,17 @@
+---
+
+- name: Jinja multiline variables
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    output: >-
+      {{
+        input 
+      }}
+    input: test
+  tasks:
+  - debug:
+      var: output
+  - assert:
+      that:
+      - output == 'test'
