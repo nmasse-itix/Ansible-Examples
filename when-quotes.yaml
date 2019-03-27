@@ -8,23 +8,23 @@
   tasks:
 
   - name: I'm skipped and that's ok
-    debug:
-      msg: I'm skipped and that's ok
+    fail:
+      msg: If you see this, there is something wrong
     when: (a and b) or c
 
   - name: I'm skipped and that's ok
-    debug:
-      msg: I'm skipped and that's ok
+    fail:
+      msg: If you see this, there is something wrong
     when: '(a and b) or c'
 
   - name: I'm skipped and that's ok
-    debug:
-      msg: I'm skipped and that's ok
+    fail:
+      msg: If you see this, there is something wrong
     when: >-
       (a and b) or c
 
   - name: I should not be there!
     fail:
-      msg: I should not be there!
+      msg: Quotes at the wrong place will lead to a wrong result
     when: ('a and b') or 'c'
 
