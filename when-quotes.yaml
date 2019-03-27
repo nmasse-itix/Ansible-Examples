@@ -1,0 +1,30 @@
+- name: Effect of quotes in when conditions
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    a: true
+    b: false
+    c: false
+  tasks:
+
+  - name: I'm skipped and that's ok
+    debug:
+      msg: I'm skipped and that's ok
+    when: (a and b) or c
+
+  - name: I'm skipped and that's ok
+    debug:
+      msg: I'm skipped and that's ok
+    when: '(a and b) or c'
+
+  - name: I'm skipped and that's ok
+    debug:
+      msg: I'm skipped and that's ok
+    when: >-
+      (a and b) or c
+
+  - name: I should not be there!
+    fail:
+      msg: I should not be there!
+    when: ('a and b') or 'c'
+
