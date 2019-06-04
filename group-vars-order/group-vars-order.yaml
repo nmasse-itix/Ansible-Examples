@@ -1,0 +1,8 @@
+- name: group_vars files are sorted and evaluated in order
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - assert:
+      that:
+      - test == 3
+  
