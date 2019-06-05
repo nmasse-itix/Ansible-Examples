@@ -1,0 +1,6 @@
+- name: 
+  hosts: localhost
+  tasks:
+  - assert:
+      that:
+      - test == 'present'
