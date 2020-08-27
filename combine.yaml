@@ -1,6 +1,6 @@
 ---
 
-- name: TODO
+- name: Merge two hashes with combine
   gather_facts: no
   hosts: localhost
   tasks:
@@ -13,6 +13,7 @@
         - output.spec.firstname == "jane"
         - output.spec.lastname == "doe"
         - output.extended_spec.age == 21
+        - output.extra.knows == "ansible"
     vars:
       output: "{{ input1|combine(input2, recursive=True) }}"
       input1:
@@ -26,5 +27,7 @@
           firstname: jane
         extended_spec:
           age: 21
+        extra:
+          knows: ansible
         
 
