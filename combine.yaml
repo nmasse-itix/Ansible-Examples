@@ -1,0 +1,30 @@
+---
+
+- name: TODO
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output.type == "person"
+        - output.spec.firstname == "jane"
+        - output.spec.lastname == "doe"
+        - output.extended_spec.age == 21
+    vars:
+      output: "{{ input1|combine(input2, recursive=True) }}"
+      input1:
+        type: person
+        spec:
+          firstname: john
+          lastname: doe
+        extended_spec: {}
+      input2:
+        spec:
+          firstname: jane
+        extended_spec:
+          age: 21
+        
+
