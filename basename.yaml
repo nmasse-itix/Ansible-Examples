@@ -1,0 +1,13 @@
+- name: Basename of an HTTP url
+  gather_facts: no
+  hosts: localhost
+  tasks:
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output == "fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2.xz"
+    vars:
+      output: "{{ input|basename }}"
+      input: https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211203.3.0/x86_64/fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2.xz
