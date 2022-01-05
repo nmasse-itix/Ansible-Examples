@@ -4,10 +4,14 @@
   tasks:
   - block:
     - debug:
-        var: output
+        var: basename
+    - debug:
+        var: filename
     - assert:
         that:
-        - output == "fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2.xz"
+        - basename == "fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2.xz"
+        - filename == "fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2"
     vars:
-      output: "{{ input|basename }}"
+      basename: "{{ input|basename }}"
+      filename: "{{ basename|splitext|first }}"
       input: https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211203.3.0/x86_64/fedora-coreos-35.20211203.3.0-qemu.x86_64.qcow2.xz
