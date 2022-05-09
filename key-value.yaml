@@ -1,0 +1,15 @@
+- name: Jinja dict to key/value list
+  gather_facts: no
+  hosts: localhost
+  vars: 
+    expected: param1=foo,param2=bar
+    input:
+      param1: foo
+      param2: bar
+    output: '{{ input.items() | map("join", "=") | sort | join(",") }}'
+  tasks:
+  - debug:
+      var: output
+  - assert:
+      that:
+      - output == expected
