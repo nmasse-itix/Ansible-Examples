@@ -32,3 +32,12 @@
     vars:
       output: "{{ input|selectattr('system_name', 'equalto', system_name)|list }}"
       system_name: Say_Hello
+  - block:
+    - debug:
+        var: output
+    - assert:
+        that:
+        - output|length == 0
+    vars:
+      output: "{{ input|selectattr('system_name', 'equalto', system_name)|list }}"
+      system_name: missing
